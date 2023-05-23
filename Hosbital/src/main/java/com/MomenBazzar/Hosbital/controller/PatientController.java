@@ -4,6 +4,7 @@ import com.MomenBazzar.Hosbital.dto.*;
 import com.MomenBazzar.Hosbital.service.MedicationService;
 import com.MomenBazzar.Hosbital.service.PatientService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -36,7 +37,8 @@ public class PatientController {
         if (errors != null) return ResponseEntity.badRequest().body(errors);
 
         Optional<PatientReadDto> patientDto = patientService.addPatient(addDto);
-        return ResponseEntity.ok(patientDto);
+        return patientDto.map(dto -> ResponseEntity.status(HttpStatus.CREATED).body(dto))
+                .orElse(ResponseEntity.badRequest().build());
     }
 
     @PutMapping("/{id}")

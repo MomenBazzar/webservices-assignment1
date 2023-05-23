@@ -38,8 +38,8 @@ public class AppointmentController {
 
         try {
             Optional<AppointmentReadDto> appointmentDto = appointmentService.addAppointment(addDto);
-            return appointmentDto.map(ResponseEntity::ok)
-                    .orElse(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
+            return appointmentDto.map(dto -> ResponseEntity.status(HttpStatus.CREATED).body(dto))
+                    .orElse(ResponseEntity.badRequest().build());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

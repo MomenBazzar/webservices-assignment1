@@ -3,6 +3,7 @@ package com.MomenBazzar.Hosbital.controller;
 import com.MomenBazzar.Hosbital.dto.*;
 import com.MomenBazzar.Hosbital.service.DoctorService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +34,8 @@ public class DoctorController {
         if (errors != null) return ResponseEntity.badRequest().body(errors);
 
         Optional<DoctorReadDto> doctorDto = doctorService.addDoctor(addDto);
-        return ResponseEntity.ok(doctorDto);
+        return doctorDto.map(dto -> ResponseEntity.status(HttpStatus.CREATED).body(dto))
+                .orElse(ResponseEntity.badRequest().build());
     }
 
 
